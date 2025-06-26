@@ -1,10 +1,15 @@
-# Only track these directories:
-!/Content/MyAnimation/
-!/Content/MyContent/
-!/Source/
-
 # Ignore everything else
 /*
+
+# Only track these directories:
+!Content/
+Content/*
+
+!Content/MyAnimation/
+!Content/MyContent/
+!Source/
+
+
 
 # But do not ignore the .gitignore itself
 !.gitignore
