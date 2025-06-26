@@ -9,6 +9,12 @@ Content/*
 !Content/MyContent/
 !Source/
 
+!/Content/RPG_Hero_Character/
+Content/RPG_Hero_Character/*
+!/Content/RPG_Hero_Character/Assets/
+/Content/RPG_Hero_Character/Assets/*
+!/Content/RPG_Hero_Character/Assets/Meshes/
+
 
 
 # But do not ignore the .gitignore itself
