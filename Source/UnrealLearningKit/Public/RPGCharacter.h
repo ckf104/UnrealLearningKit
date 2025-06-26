@@ -48,6 +48,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	void JumpNextComboSection();
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool IsIdle() const { return AttackState == EAttackState::Idle; }
 	
 	UPROPERTY(EditAnywhere, Category = "Action")	
 	TObjectPtr<class UAnimMontage> AttackMontage;

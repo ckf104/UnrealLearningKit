@@ -4,6 +4,7 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Runtime/AIModule/Classes/BehaviorTree/BTTaskNode.h"
 
 // Sets default values
 ARPGCharacter::ARPGCharacter()
