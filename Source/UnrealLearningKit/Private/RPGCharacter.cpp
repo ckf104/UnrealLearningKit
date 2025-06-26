@@ -2,6 +2,7 @@
 
 #include "RPGCharacter.h"
 #include "Animation/AnimInstance.h"
+#include "Animation/AnimMontage.h"
 #include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
@@ -17,8 +18,8 @@ void ARPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	auto* MeshComp = GetMesh();
 	// TODO: 如何动态地绑定和解绑通知
-	MeshComp->GetAnimInstance()->OnPlayMontageNotifyBegin.AddDynamic(this, &ARPGCharacter ::StartComboPeriod);
-	MeshComp->GetAnimInstance()->OnPlayMontageNotifyEnd.AddDynamic(this, &ARPGCharacter::EndComboPeriod);
+	// MeshComp->GetAnimInstance()->OnPlayMontageNotifyBegin.AddDynamic(this, &ARPGCharacter ::StartComboPeriod);
+	// MeshComp->GetAnimInstance()->OnPlayMontageNotifyEnd.AddDynamic(this, &ARPGCharacter::EndComboPeriod);
 	MeshComp->GetAnimInstance()->OnMontageBlendingOut.AddDynamic(this, &ARPGCharacter::MontageBlendingOut);
 }
 
@@ -34,50 +35,66 @@ void ARPGCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void ARPGCharacter::StartComboPeriod(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+void ARPGCharacter::StartComboPeriod()
 {
 	bComboPeriod = true;
 	bComboSuccess = false;
 }
 
-void ARPGCharacter::EndComboPeriod(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+void ARPGCharacter::EndComboPeriod()
 {
 	bComboPeriod = false;
 	bComboSuccess = false;
 	AttackState = EAttackState::Idle;
 }
 
+void ARPGCharacter::JumpNextComboSection()
+{
+	if (bComboPeriod && bComboSuccess)
+	{
+		switch (AttackState)
+		{
+			case EAttackState::Combo1:
+				AttackState = EAttackState::Combo2;
+				GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName("Combo2"), AttackMontage);
+				break;
+			case EAttackState::Combo2:
+				AttackState = EAttackState::Combo3;
+				GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName("Combo3"), AttackMontage);
+				break;
+			case EAttackState::Combo3:
+				AttackState = EAttackState::Combo4;
+				GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName("Combo4"), AttackMontage);
+				break;
+			case EAttackState::Combo4:
+				AttackState = EAttackState::Combo5;
+				GetMesh()->GetAnimInstance()->Montage_JumpToSection(FName("Combo5"), AttackMontage);
+				break;
+			default:
+				break;
+		}
+	}
+}
+
 void ARPGCharacter::MontageBlendingOut(UAnimMontage* Montage, bool bInterrupted)
 {
-	bComboPeriod = false;
-	bComboSuccess = false;
-	AttackState = EAttackState::Idle;
+	if (Montage == AttackMontage)
+	{
+		bComboPeriod = false;
+		bComboSuccess = false;
+		AttackState = EAttackState::Idle;
+	}
 }
 
 void ARPGCharacter::TriggerAttack()
 {
 	if (AttackState == EAttackState::Idle)
 	{
+		PlayAnimMontage(AttackMontage);
 		AttackState = EAttackState::Combo1;
-		// TODO: Play Montage
 	}
 	else
 	{
 		bComboSuccess = bComboSuccess | bComboPeriod;
-		if (bComboPeriod)
-		{
-			switch (AttackState)
-			{
-				case EAttackState::Combo1:
-					AttackState = EAttackState::Combo2;
-					break;
-				case EAttackState::Combo2:
-					AttackState = EAttackState::Combo3;
-					break;
-				case EAttackState::Combo3:
-					AttackState = EAttackState::Combo4;
-					break;
-			}
-		}
 	}
 }

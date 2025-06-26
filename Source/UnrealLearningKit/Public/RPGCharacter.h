@@ -40,6 +40,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	void TriggerAttack();
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void StartComboPeriod();
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void EndComboPeriod();
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void JumpNextComboSection();
 	
 	UPROPERTY(EditAnywhere, Category = "Action")	
 	TObjectPtr<class UAnimMontage> AttackMontage;
@@ -49,8 +57,8 @@ public:
 
 
 private:
-	void StartComboPeriod(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
-	void EndComboPeriod(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+
+	UFUNCTION()
 	void MontageBlendingOut(UAnimMontage* Montage, bool bInterrupted);
 
 
