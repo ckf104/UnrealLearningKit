@@ -15,7 +15,10 @@ Content/RPG_Hero_Character/*
 /Content/RPG_Hero_Character/Assets/*
 !/Content/RPG_Hero_Character/Assets/Meshes/
 
-
+!/Content/LearningKit_Games/
+/Content/LearningKit_Games/*
+!/Content/LearningKit_Games/Maps/
+/Content/LearningKit_Games/Maps/LearningKit_Robotics_Showcase.umap
 
 # But do not ignore the .gitignore itself
 !.gitignore
