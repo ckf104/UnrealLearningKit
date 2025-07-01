@@ -136,9 +136,9 @@ void AEnemyCharacterBase::UINotifyWhenTakeDamage(float RealDamage)
 	if (HPWidgetComp)
 	{
 		auto* AttackUIInterface = Cast<IAttackUIInterface>(HPWidgetComp);
-		if (AttackUIInterface)
+		if (HPWidgetComp.GetClass()->ImplementsInterface(UAttackUIInterface::StaticClass()))
 		{
-			AttackUIInterface->SetHPPercentage(FMath::Clamp(AttackAttr.CurrentHP / AttackAttr.TotalHP, 0.0f, 1.0f));
+			IAttackUIInterface::Execute_SetHPPercentage(HPWidgetComp, FMath::Clamp(AttackAttr.CurrentHP / AttackAttr.TotalHP, 0.0f, 1.0f));
 		}
 	}
 	ShowHP(true);
