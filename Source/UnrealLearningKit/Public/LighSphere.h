@@ -44,5 +44,5 @@ public:
 private:
 	float MovedDistance;
 
-	int32 bShouldDestory: 1;
+	uint8 bShouldDestory: 1;
 };

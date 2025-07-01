@@ -8,7 +8,7 @@ public class UnrealLearningKit : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "PhysicsCore", "Chaos", "Paper2D", "AIModule"});
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "PhysicsCore", "Chaos", "Paper2D", "AIModule", "UMG"});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
