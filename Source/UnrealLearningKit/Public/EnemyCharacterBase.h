@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "GenericTeamAgentInterface.h"
+#include "RPGCharacter.h"
 #include "Templates/SubclassOf.h"
 
 #include "EnemyCharacterBase.generated.h"
@@ -73,11 +74,16 @@ public:
 
 	// Implement the Attack Interface
 	void DealAttackEvent_Implementation() override;
+	void DealDeathEvent_Implementation() override;
 
 	float InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	float CalculateRealDamage(float Damage) const;
 
 public:
+	// BP 负责播放死亡特效以及摧毁 actor
+	UFUNCTION(BlueprintImplementableEvent, Category = "Action")
+	void OnDeath();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	FName HPWidgetName;
 
@@ -93,4 +99,8 @@ private:
 	void UINotifyWhenTakeDamage(float RealDamage);
 	void ShowHP(bool bShow);
 	void ShowDamageNumber(float RealDamage);
+
+private:
+	UPROPERTY(BlueprintReadWrite, Category = "Action", meta = (AllowPrivateAccess = "true"))
+	EAttackState AttackState = EAttackState::Idle;
 };

@@ -105,23 +105,33 @@ float AEnemyCharacterBase::CalculateRealDamage(float Damage) const
 
 float AEnemyCharacterBase::InternalTakePointDamage(float Damage, struct FPointDamageEvent const& PointDamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	UE_LOG(LogTemp, Log, TEXT("Enemy %s took %f damage from %s"), *GetName(), Damage, *DamageCauser->GetName());
+	if (AttackState == EAttackState::Dead)
+	{
+		return 0.0f; // Already dead, no damage taken
+	}
+
 	auto RealDamage = CalculateRealDamage(Damage);
 	AttackAttr.CurrentHP = FMath::Clamp(AttackAttr.CurrentHP - RealDamage, 0.0f, AttackAttr.TotalHP);
 	UINotifyWhenTakeDamage(RealDamage);
 	if (AttackAttr.CurrentHP <= 0.0f)
 	{
-		// TODO something
+		AttackState = EAttackState::Dead;
 		PlayAnimMontage(DeathMontage);
-		auto Delegate = FOnMontageEnded::CreateUObject(this, &AEnemyCharacterBase::OnDeathMontageEnded);
-		GetMesh()->GetAnimInstance()->Montage_SetEndDelegate(Delegate, DeathMontage);
+		SetActorEnableCollision(false);
+		//auto Delegate = FOnMontageEnded::CreateUObject(this, &AEnemyCharacterBase::OnDeathMontageEnded);
+		//GetMesh()->GetAnimInstance()->Montage_SetEndDelegate(Delegate, DeathMontage);
 	}
 	return RealDamage;
 }
 
+void AEnemyCharacterBase::DealDeathEvent_Implementation()
+{
+	OnDeath();
+}
+
 void AEnemyCharacterBase::OnDeathMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
-	Destroy();
+	OnDeath();
 }
 
 void AEnemyCharacterBase::ShowHP(bool bShow)

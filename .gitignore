@@ -20,5 +20,11 @@ Content/RPG_Hero_Character/*
 !/Content/LearningKit_Games/Maps/
 /Content/LearningKit_Games/Maps/LearningKit_Robotics_Showcase.umap
 
+!/Content/FishMan/
+Content/FishMan/*
+!/Content/FishMan/Textures__Materials/
+Content/FishMan/Textures__Materials/*
+!/Content/FishMan/Textures__Materials/Fishman_1.uasset
+
 # But do not ignore the .gitignore itself
 !.gitignore

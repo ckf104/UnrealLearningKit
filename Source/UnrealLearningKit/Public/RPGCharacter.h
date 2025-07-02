@@ -21,6 +21,7 @@ enum class EAttackState : uint8
 	Combo3,
 	Combo4,
 	Combo5,
+	Dead,
 };
 
 UENUM(BlueprintType)

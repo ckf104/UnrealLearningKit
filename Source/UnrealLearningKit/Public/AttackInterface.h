@@ -28,4 +28,9 @@ public:
 	void DealAttackEvent();
 
 	virtual void DealAttackEvent_Implementation() = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	void DealDeathEvent();
+
+	virtual void DealDeathEvent_Implementation() = 0;
 };
