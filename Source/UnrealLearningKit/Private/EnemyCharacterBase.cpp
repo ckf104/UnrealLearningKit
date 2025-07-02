@@ -2,12 +2,15 @@
 
 #include "EnemyCharacterBase.h"
 #include "AIController.h"
+#include "Animation/AnimInstance.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/DamageEvents.h"
 #include "GenericTeamAgentInterface.h"
 #include "AttackUIInterface.h"
 #include "RPGCharacter.h"
+#include "Templates/Casts.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -109,8 +112,16 @@ float AEnemyCharacterBase::InternalTakePointDamage(float Damage, struct FPointDa
 	if (AttackAttr.CurrentHP <= 0.0f)
 	{
 		// TODO something
+		PlayAnimMontage(DeathMontage);
+		auto Delegate = FOnMontageEnded::CreateUObject(this, &AEnemyCharacterBase::OnDeathMontageEnded);
+		GetMesh()->GetAnimInstance()->Montage_SetEndDelegate(Delegate, DeathMontage);
 	}
 	return RealDamage;
+}
+
+void AEnemyCharacterBase::OnDeathMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	Destroy();
 }
 
 void AEnemyCharacterBase::ShowHP(bool bShow)
@@ -135,7 +146,6 @@ void AEnemyCharacterBase::UINotifyWhenTakeDamage(float RealDamage)
 {
 	if (HPWidgetComp)
 	{
-		auto* AttackUIInterface = Cast<IAttackUIInterface>(HPWidgetComp);
 		if (HPWidgetComp.GetClass()->ImplementsInterface(UAttackUIInterface::StaticClass()))
 		{
 			IAttackUIInterface::Execute_SetHPPercentage(HPWidgetComp, FMath::Clamp(AttackAttr.CurrentHP / AttackAttr.TotalHP, 0.0f, 1.0f));

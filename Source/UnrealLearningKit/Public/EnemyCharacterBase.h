@@ -58,7 +58,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Action")
 	TSubclassOf<AActor> HitActorClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Action")
+	TObjectPtr<class UAnimMontage> DeathMontage;
+
 	void PostInitializeComponents() override;
+
+	void OnDeathMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
